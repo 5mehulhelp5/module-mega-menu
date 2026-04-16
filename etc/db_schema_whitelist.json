@@ -170,11 +170,15 @@
         "index": {
             "PANTH_MEGAMENU_VERSION_MENU_ID": true,
             "PANTH_MEGAMENU_VERSION_CREATED_AT": true,
-            "PANTH_MEGAMENU_VERSION_MENU_VERSION": true
+            "PANTH_MEGAMENU_VERSION_MENU_VERSION": true,
+            "PANTH_MEGAMENU_MENU_VERSION_MENU_ID": true,
+            "PANTH_MEGAMENU_MENU_VERSION_CREATED_AT": true,
+            "PANTH_MEGAMENU_MENU_VERSION_MENU_ID_VERSION_NUMBER": true
         },
         "constraint": {
             "PRIMARY": true,
-            "PANTH_MEGAMENU_VERSION_MENU_ID_PANTH_MEGAMENU_MENU_MENU_ID": true
+            "PANTH_MEGAMENU_VERSION_MENU_ID_PANTH_MEGAMENU_MENU_MENU_ID": true,
+            "PANTH_MEGAMENU_MENU_VERSION_MENU_ID_PANTH_MEGAMENU_MENU_MENU_ID": true
         }
     }
 }
