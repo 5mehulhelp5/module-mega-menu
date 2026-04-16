@@ -3,16 +3,12 @@
 /**
  * MegaMenu base layout — loads Luma menu inside header (same row as logo).
  * On Hyva, default_hyva.xml removes this; theme layout adds Alpine.js menu.
+ * Default nav removal is handled by RemoveDefaultNavigation plugin (per-store config aware).
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- Remove Luma's default nav-sections (we replace with inline menu) -->
-        <referenceBlock name="navigation.sections" remove="true"/>
-        <referenceBlock name="catalog.topnav" remove="true"/>
-
-        <!-- Add MegaMenu inside the header wrapper (same row as logo) -->
         <referenceContainer name="header-wrapper">
             <block class="Panth\MegaMenu\Block\Menu"
                    name="megamenu.main"
