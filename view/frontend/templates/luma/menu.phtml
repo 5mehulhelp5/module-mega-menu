@@ -1041,43 +1041,46 @@ $renderMobileItems = function (array $items, int $level = 0) use (
         if (!ul || !btnL || !btnR) return;
 
         var offset = 0, animFrame = null, targetOff = 0;
+        var cachedMaxOff = 0;
         function getVisibleWidth() { return wrap.clientWidth; }
         function getMaxOffset() { return Math.max(0, ul.scrollWidth - getVisibleWidth()); }
+        function refreshLayout() { cachedMaxOff = getMaxOffset(); }
         function update() {
-            var maxOff = getMaxOffset();
-            var hasOverflow = maxOff > 2;
+            var hasOverflow = cachedMaxOff > 2;
             btnL.classList.toggle('visible', hasOverflow && offset > 2);
-            btnR.classList.toggle('visible', hasOverflow && offset < maxOff - 2);
+            btnR.classList.toggle('visible', hasOverflow && offset < cachedMaxOff - 2);
             if (fadeL) fadeL.classList.toggle('visible', hasOverflow && offset > 2);
-            if (fadeR) fadeR.classList.toggle('visible', hasOverflow && offset < maxOff - 2);
+            if (fadeR) fadeR.classList.toggle('visible', hasOverflow && offset < cachedMaxOff - 2);
         }
         function smoothTo() {
             var diff = targetOff - offset;
             if (Math.abs(diff) < 0.5) { offset = targetOff; animFrame = null; }
             else { offset += diff * 0.2; animFrame = requestAnimationFrame(smoothTo); }
             ul.style.transform = offset > 0 ? 'translateX(-' + offset + 'px)' : '';
-            update();
+            update();   // safe now — uses cachedMaxOff, no layout read
         }
         btnL.addEventListener('click', function() {
             offset = Math.max(0, offset - 200); targetOff = offset;
             ul.style.transform = 'translateX(-' + offset + 'px)'; update();
         });
         btnR.addEventListener('click', function() {
-            offset = Math.min(getMaxOffset(), offset + 200); targetOff = offset;
+            offset = Math.min(cachedMaxOff, offset + 200); targetOff = offset;
             ul.style.transform = 'translateX(-' + offset + 'px)'; update();
         });
         wrap.addEventListener('wheel', function(e) {
-            var maxOff = getMaxOffset();
+            var maxOff = cachedMaxOff;
             if (maxOff <= 2) return;
             e.preventDefault();
             targetOff = Math.max(0, Math.min(maxOff, (animFrame ? targetOff : offset) + (e.deltaY !== 0 ? e.deltaY : e.deltaX) * 0.5));
             if (!animFrame) animFrame = requestAnimationFrame(smoothTo);
         }, { passive: false });
         window.addEventListener('resize', function() {
-            var m = getMaxOffset();
+            refreshLayout();
+            var m = cachedMaxOff;
             if (offset > m) { offset = m; targetOff = m; ul.style.transform = offset > 0 ? 'translateX(-' + offset + 'px)' : ''; }
             update();
         });
+        refreshLayout();
         update();
     }
     if (document.readyState === 'loading') {
